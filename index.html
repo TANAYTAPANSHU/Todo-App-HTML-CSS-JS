@@ -12,19 +12,16 @@
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
 }
-::selection{
-  color: #ffff;
-  background: rgb(142, 73, 232);
-}
+
 body{
   width: 100%;
   height: 100vh;
   /* overflow: hidden; */
   padding: 10px;
-  background: linear-gradient(to bottom, #68EACC 0%, #497BE8 100%);
+  background: linear-gradient(to left, #eecda3 0%, #ef629f 100%);
 }
 .wrapper{
-  background: #fff;
+  background:#fff;
   max-width: 400px;
   width: 100%;
   margin: 120px auto;
@@ -33,8 +30,9 @@ body{
   box-shadow: 0px 10px 15px rgba(0,0,0,0.1);
 }
 .wrapper header{
-  font-size: 30px;
-  font-weight: 600;
+    font-size: 35px;
+    font-weight: 600;
+    text-align: center;
 }
 .wrapper .inputField{
   margin: 20px 0;
@@ -53,7 +51,7 @@ body{
   transition: all 0.3s ease;
 }
 .inputField input:focus{
-  border-color: #8E49E8;
+  border-color: #ef629f;
 }
 .inputField button{
   width: 50px;
@@ -63,7 +61,7 @@ body{
   margin-left: 5px;
   font-size: 21px;
   outline: none;
-  background: #8E49E8;
+  background:linear-gradient(to bottom, #eecda3 10%, #ef629f 60%);
   cursor: pointer;
   border-radius: 3px;
   opacity: 0.6;
@@ -72,66 +70,33 @@ body{
 }
 .inputField button:hover,
 .footer button:hover{
-  background: #721ce3;
+  background: #ef629f;
 }
 .inputField button.active{
   opacity: 1;
   pointer-events: auto;
 }
-.wrapper .todoList{
-  max-height: 250px;
-  overflow-y: auto;
-}
+
 .todoList li{
-  position: relative;
-  list-style: none;
-  height: 45px;
-  line-height: 45px;
+    display: 'flex';
+
   margin-bottom: 8px;
-  background: #f2f2f2;
-  border-radius: 3px;
-  padding: 0 15px;
-  cursor: default;
+  background: #efefef;
+  padding: 15px 15px;
+  
+ 
   overflow: hidden;
 }
-.todoList li .icon{
- 
-  background: #e74c3c;
-  width: 45px;
-  text-align: center;
-  color: #fff;
-  border-radius: 0 3px 3px 0;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
+
 
 .wrapper .footer{
   display: flex;
   width: 100%;
   margin-top: 20px;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
 }
-.footer button{
-  padding: 6px 10px;
-  border-radius: 3px;
-  border: none;
-  outline: none;
-  color: #fff;
-  font-weight: 400;
-  font-size: 16px;
-  margin-left: 5px;
-  background: #8E49E8;
-  cursor: pointer;
-  user-select: none;
-  opacity: 0.6;
-  pointer-events: none;
-  transition: all 0.3s ease;
-}
-.footer button.active{
-  opacity: 1;
-  pointer-events: auto;
-}
+
     </style>
 
 
@@ -141,14 +106,13 @@ body{
         <header>Todo App</header>
         <div class="inputField">
           <input type="text" placeholder="Add your new todo">
-          <button><i class="fas fa-plus"></i></button>
+          <button> + </button>
         </div>
         <ul class="todoList">
-          <!-- data are comes from local storage -->
+     
         </ul>
         <div class="footer">
-          <span>You have <span class="pendingTasks"></span> pending tasks</span>
-          <button>Clear All</button>
+          <span>Hey Buddy <span class="remainingTasks"></span> tasks are remaining</span>
         </div>
       </div>
    <script>
@@ -157,71 +121,55 @@ body{
 const inputBox = document.querySelector(".inputField input");
 const addBtn = document.querySelector(".inputField button");
 const todoList = document.querySelector(".todoList");
-const deleteAllBtn = document.querySelector(".footer button");
+
 
 // onkeyup event
 inputBox.onkeyup = ()=>{
-  let userEnteredValue = inputBox.value; //getting user entered value
-  if(userEnteredValue.trim() != 0){ //if the user value isn't only spaces
-    addBtn.classList.add("active"); //active the add button
+  let userEnteredValue = inputBox.value; 
+  if(userEnteredValue.trim() != 0){ 
+    addBtn.classList.add("active");
   }else{
-    addBtn.classList.remove("active"); //unactive the add button
+    addBtn.classList.remove("active");
   }
 }
 
-showTasks(); //calling showTask function
+displayTasks(); 
 
-addBtn.onclick = ()=>{ //when user click on plus icon button
-  let userEnteredValue = inputBox.value; //getting input field value
-  let getLocalStorageData = localStorage.getItem("New Todo"); //getting localstorage
-  if(getLocalStorageData == null){ //if localstorage has no data
-    listArray = []; //create a blank array
+console.log(localStorage)
+
+addBtn.onclick = ()=>{ 
+  let userEnteredValue = inputBox.value;
+  let getLocalStorageData = localStorage.getItem("Todo Tasks");
+  if(getLocalStorageData == null){ 
+    taskList = []; //create a blank array
   }else{
-    listArray = JSON.parse(getLocalStorageData);  //transforming json string into a js object
+    taskList = JSON.parse(getLocalStorageData);  
   }
-  listArray.push(userEnteredValue); //pushing or adding new value in array
-  localStorage.setItem("New Todo", JSON.stringify(listArray)); //transforming js object into a json string
-  showTasks(); //calling showTask function
-  addBtn.classList.remove("active"); //unactive the add button once the task added
+  taskList.push(userEnteredValue); 
+  localStorage.setItem("Todo Tasks", JSON.stringify(taskList)); 
+  displayTasks(); 
+  addBtn.classList.remove("active"); 
 }
 
-function showTasks(){
-  let getLocalStorageData = localStorage.getItem("New Todo");
+function displayTasks(){
+  let getLocalStorageData = localStorage.getItem("Todo Tasks");
   if(getLocalStorageData == null){
-    listArray = [];
+    taskList = [];
   }else{
-    listArray = JSON.parse(getLocalStorageData); 
+    taskList= JSON.parse(getLocalStorageData); 
   }
-  const pendingTasksNumb = document.querySelector(".pendingTasks");
-  pendingTasksNumb.textContent = listArray.length; //passing the array length in pendingtask
-  if(listArray.length > 0){ //if array length is greater than 0
-    deleteAllBtn.classList.add("active"); //active the delete button
-  }else{
-    deleteAllBtn.classList.remove("active"); //unactive the delete button
-  }
-  let newLiTag = "";
-  listArray.forEach((element, index) => {
-    newLiTag += `<li>${element}<span class="icon" onclick="deleteTask(${index})">hello</span></li>`;
+  const remainingTasksTotal = document.querySelector(".remainingTasks");
+  remainingTasksTotal.textContent = taskList.length; 
+ 
+  let newList = "";
+  taskList.forEach((element, index) => {
+    newList += `<li>${element}</li>`;
   });
-  todoList.innerHTML = newLiTag; //adding new li tag inside ul tag
-  inputBox.value = ""; //once task added leave the input field blank
+  todoList.innerHTML = newList; 
+  inputBox.value = ""; 
 }
 
-// delete task function
-function deleteTask(index){
-  let getLocalStorageData = localStorage.getItem("New Todo");
-  listArray = JSON.parse(getLocalStorageData);
-  listArray.splice(index, 1); //delete or remove the li
-  localStorage.setItem("New Todo", JSON.stringify(listArray));
-  showTasks(); //call the showTasks function
-}
 
-// delete all tasks function
-deleteAllBtn.onclick = ()=>{
-  listArray = []; //empty the array
-  localStorage.setItem("New Todo", JSON.stringify(listArray)); //set the item in localstorage
-  showTasks(); //call the showTasks function
-}
    </script> 
 </body>
 </html>
